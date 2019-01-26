@@ -117,6 +117,11 @@ app.get('/logout', function(req, res) {
 });
 
 
+app.get("/blancaexample", (req, res, next) => {
+  res.json(["This is ","an example of ","a JSON response","Blanca","Tebar!"]);
+ });
+
+
 app.listen(port);
 console.log("Started listening on %i", port);
 // app.listen(port, '0.0.0.0', function(err) {
