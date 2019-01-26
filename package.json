@@ -1,0 +1,27 @@
+{
+  "name": "crowdbeats_host",
+  "version": "1.0.0",
+  "description": "middlware for handling Spotify API",
+  "main": "app.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-oauth": "^1.0.0",
+    "pkginfo": "^0.4.1",
+    "request": "^2.88.0",
+    "spotify-web-api-node": "^4.0.0",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kapilan M <mnckapilan@gmail.com>",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib"
+  }
+}
