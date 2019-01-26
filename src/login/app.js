@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: `http://localhost:${port}/callback`
+      callbackURL: `http://crowdbeats-host.herokuapp.com/callback`
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
