@@ -32,7 +32,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: 'https://localhost:8888/callback'
+      callbackURL: 'http://localhost:8888/callback'
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
@@ -114,10 +114,10 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8888;
 }
-
-app.listen(port, '0.0.0.0', function(err) {
-  console.log("Started listening on %i", port);
-});
+app.listen(8888);
+// app.listen(port, '0.0.0.0', function(err) {
+//   console.log("Started listening on %i", port);
+// });
 
 
 // Simple route middleware to ensure user is authenticated.
