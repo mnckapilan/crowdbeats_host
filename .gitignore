@@ -1,4 +1,6 @@
 /node_modules
+/login/node_modules
 npm-debug.log
 .DS_Store
+/lib
 /*.env
