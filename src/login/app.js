@@ -33,7 +33,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: 'http://localhost:8000/callback'
+      callbackURL: 'http://localhost:8888/callback'
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
@@ -111,13 +111,15 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-console.log('Listening on 8000');
-
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 8888;
 }
-app.listen(port);
+
+app.listen(port, '0.0.0.0', function(err) {
+  console.log("Started listening on %i", port);
+});
+
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If

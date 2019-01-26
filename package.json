@@ -23,5 +23,8 @@
   "license": "ISC",
   "directories": {
     "lib": "lib"
+  },
+  "engines": {
+    "node": "10.15.0"
   }
 }
