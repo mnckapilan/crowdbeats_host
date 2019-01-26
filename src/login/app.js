@@ -32,7 +32,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: 'http://localhost:8888/callback'
+      callbackURL: 'http://crowdbeats-host.herokuapp.com/callback'
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
@@ -114,7 +114,8 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8888;
 }
-app.listen(8888);
+app.listen(port);
+console.log("Started listening on %i", port);
 // app.listen(port, '0.0.0.0', function(err) {
 //   console.log("Started listening on %i", port);
 // });
