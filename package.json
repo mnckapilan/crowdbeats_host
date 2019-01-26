@@ -4,6 +4,7 @@
   "description": "middlware for handling Spotify API",
   "main": "app.js",
   "dependencies": {
+    "consolidate": "^0.15.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -12,7 +13,8 @@
     "passport-oauth": "^1.0.0",
     "pkginfo": "^0.4.1",
     "request": "^2.88.0",
-    "spotify-web-api-node": "^4.0.0"
+    "spotify-web-api-node": "^4.0.0",
+    "swig": "^1.4.2"
   },
   "devDependencies": {},
   "scripts": {

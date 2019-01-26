@@ -1,6 +1,8 @@
 var express = require('express'),
   session = require('express-session'),
   passport = require('passport'),
+  swig = require('swig'),
+
   SpotifyStrategy = require('../../lib/passport-spotify/index').Strategy;
 
 var consolidate = require('consolidate');
@@ -27,12 +29,16 @@ passport.deserializeUser(function(obj, done) {
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, expires_in
 //   and spotify profile), and invoke a callback with a user object.
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8888;
+}
 passport.use(
   new SpotifyStrategy(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: 'http://crowdbeats-host.herokuapp.com/callback'
+      callbackURL: `http://localhost:${port}/callback`
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
@@ -110,10 +116,7 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 8888;
-}
+
 app.listen(port);
 console.log("Started listening on %i", port);
 // app.listen(port, '0.0.0.0', function(err) {
