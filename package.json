@@ -12,8 +12,7 @@
     "passport-oauth": "^1.0.0",
     "pkginfo": "^0.4.1",
     "request": "^2.88.0",
-    "spotify-web-api-node": "^4.0.0",
-    "swig": "^1.4.2"
+    "spotify-web-api-node": "^4.0.0"
   },
   "devDependencies": {},
   "scripts": {

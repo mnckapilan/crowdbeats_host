@@ -1,7 +1,6 @@
 var express = require('express'),
   session = require('express-session'),
   passport = require('passport'),
-  swig = require('swig'),
   SpotifyStrategy = require('../../lib/passport-spotify/index').Strategy;
 
 var consolidate = require('consolidate');
@@ -33,7 +32,7 @@ passport.use(
     {
       clientID: appKey,
       clientSecret: appSecret,
-      callbackURL: 'https://crowdbeats-host.herokuapp.com/'
+      callbackURL: 'https://localhost:8888/callback'
     },
     function(accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
