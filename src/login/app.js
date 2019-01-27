@@ -108,8 +108,14 @@ app.get('/playlist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
   spotifyApi.getPlaylist(playlist_id)
   .then(function(data) {
-    res.send(data.body);
-  }, function(err) {
+    var returnObj = [];
+    for(var i = 0; i< data.body.tracks.items.length; ++i){
+        const item = data.body.tracks.items[i].track;
+        console.log(data.body.tracks.items[i].track)
+        returnObj.push({id:item.id, name: item.name})
+      }
+      res.send(returnObj);
+    }, function(err) {
     console.log('Something went wrong!', err);
   });
 })
@@ -124,7 +130,6 @@ app.get('/addsong', function(req, res, next) {
     console.log('Something went wrong!', err);
   });
 })
-
 
 
 app.listen(port, () => console.log(`CrowdBeats listening on port ${port}!`))
