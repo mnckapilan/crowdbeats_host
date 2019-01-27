@@ -5,7 +5,8 @@ var cors = require('cors')
 const bodyParser = require('body-parser');
 const app = express();
 app.set('port', process.env.PORT || 8888);
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 8888; 
+const party_id = makeid();
 var SpotifyWebApi = require('spotify-web-api-node');
 var accessToken;
 var corsOptions = {
@@ -14,6 +15,14 @@ var corsOptions = {
 }
 
 app.use(cors(corsOptions))
+
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";  
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
 
 function handleErrors(response) {
   if (!response.ok) {
@@ -25,7 +34,8 @@ function handleErrors(response) {
 
 const client_id = '68c8c31b05a34904a91f88aa5167e935'; // Your client id
 const client_secret = 'ebddadd2800b45c18bbe9a903781d212'; // Your secret
-const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
+// const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
+const redirect_uri = 'http://localhost:8888/access'; // Your redirect uri
 const scopes = ['user-read-private', 'user-read-email','playlist-modify-public', 'playlist-modify-private'];
 const showDialog = false;
 
@@ -49,11 +59,15 @@ app.get('/access', function(req, res, next) {
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
-      res.redirect('/profile');
+      res.redirect('/party_id');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
       next(err)
     })
+}) 
+
+app.get('/party_id', function(req, res, next) {
+  res.send("party_id is "+party_id);
 }) 
 
 app.get('/profile', function(req, res, next) {
@@ -67,5 +81,27 @@ app.get('/profile', function(req, res, next) {
   });
 }) 
 
+app.get('/search', function(req, res, next) {
+  spotifyApi.setAccessToken(accessToken);
+  if(req.query.party_id == party_id){
+  const search = req.query.search;
+  spotifyApi.searchTracks(search)
+  .then(function(data) {
+    res.send(data.body);
+  }, function(err) {
+    console.error(err);
+  });
+}
+else{
+  res.send("Party ID Incorrect/Missing");
+}
+})
+
+spotifyApi.createPlaylist('My Cool Playlist', { 'public' : false })
+  .then(function(data) {
+    console.log('Created playlist!');
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
 
 app.listen(port, () => console.log(`CrowdBeats listening on port ${port}!`))
