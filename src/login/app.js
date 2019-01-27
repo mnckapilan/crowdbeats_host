@@ -142,16 +142,39 @@ app.get('/addsong', function(req, res, next) {
 })
 
 app.get('/vote', function(req, res, next) {
-   for( var i = 0; i< playlistObj.length; ++i){
+  const oldPlayList = playlistObj.slice();
+  for( var i = 0; i< playlistObj.length; ++i){
      if(playlistObj[i].id === req.query.id){
-       //FOUND OBJECT
        var objectToUpdate = playlistObj[i];
        objectToUpdate.votes += 1;
        playlistObj[i] = objectToUpdate;
-       break;
      }
    }
-   res.send(playlistObj);
+   playlistObj.sort(function(a,b){return a.votes - b.votes})
+   
+   for(var i = 0; i< oldPlayList.length; ++i){
+     for(var j = 0; j < playlistObj.length; ++j){
+      if(playlistObj[j].id == oldPlayList[i].id){
+        if(!(i===j)){
+          reorder(i, j);
+          break;
+        }
+      }
+   }
+  }
+  res.send(playlistObj);
+
 })
+
+function reorder(initial, final){
+spotifyApi.setAccessToken(accessToken);
+var options = { "range_start":0,"range_length" : playlistObj.length };
+spotifyApi.reorderTracksInPlaylist(playlist_id, initial, final, options)
+  .then(function(data) {
+    console.log('Tracks reordered in playlist!', data);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+}
 
 app.listen(port, () => console.log(`CrowdBeats listening on port ${port}!`))
