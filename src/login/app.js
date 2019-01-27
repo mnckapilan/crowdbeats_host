@@ -49,8 +49,10 @@ var spotifyApi = new SpotifyWebApi({
   redirectUri : redirect_uri
 });
 
-
 app.get('/', function(req, res) {
+  res.redirect('/party_id');
+});
+app.get('/begin', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
   res.redirect(authorizeURL);
 });
