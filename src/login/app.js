@@ -69,10 +69,10 @@ app.get('/party_id', function(req, res, next) {
 
 app.get('/newguest', function(req, res, next){
   if(req.query.party_id == party_id){
-    res.send({"success" : true})
+    res.send({"success" : "true"})
   }
   else{
-    res.send("Nonexistent Party!");
+    res.send({"success" : "false"});
   }
 })
 
