@@ -23,15 +23,9 @@ function handleErrors(response) {
   return response;
 }
 
-//app.use(express.bodyParser());
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-
-
 const client_id = '68c8c31b05a34904a91f88aa5167e935'; // Your client id
 const client_secret = 'ebddadd2800b45c18bbe9a903781d212'; // Your secret
-const redirect_uri = 'http://localhost:8888/access'; // Your redirect uri
+const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
 const scopes = ['user-read-private', 'user-read-email','playlist-modify-public', 'playlist-modify-private'];
 const showDialog = false;
 
@@ -45,13 +39,10 @@ var spotifyApi = new SpotifyWebApi({
 //   res.render('index.html', { user: req.user });
 // });
 
-app.get('/login', function(req, res) {
+app.get('/', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
   res.redirect(authorizeURL);
 });
-
-
-
 
 app.get('/access', function(req, res, next) {
     const code = req.query.code;
