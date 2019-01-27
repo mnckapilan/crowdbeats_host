@@ -95,11 +95,16 @@ app.get('/profile', function(req, res, next) {
 
 app.get('/search', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
+  var searchObj = [];
   if(req.query.party_id == party_id){
   const search = req.query.search;
   spotifyApi.searchTracks(search)
   .then(function(data) {
-    res.send(data.body);
+    for(var i = 0; i< data.body.tracks.items.length; ++i){
+      const item = data.body.tracks.items[i];
+      searchObj.push({id:item.id, name: item.name})
+    }
+    res.send(searchObj);
   }, function(err) {
     console.error(err);
   });
