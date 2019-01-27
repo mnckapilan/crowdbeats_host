@@ -7,6 +7,7 @@ const app = express();
 app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
 const party_id = makeid();
+const playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
 var SpotifyWebApi = require('spotify-web-api-node');
 var accessToken;
 var corsOptions = {
@@ -103,19 +104,15 @@ else{
 }
 })
 
-app.get('/playlist', function(req, res, next) {
+
+app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
-  if(req.query.party_id == party_id){
-    spotifyApi.getPlaylist('5ieJqeLJjjI8iJWaxeBLuK')
-    .then(function(data) {
-      res.send('Some information about this playlist', data.body);
-    }, function(err) {
-      res.send('Something went wrong!', err);
-    });
-}
-else{
-  res.send("Party ID Incorrect/Missing");
-}
+  spotifyApi.addTracksToPlaylist(playlist_id, ["spotify:track:4AhSkRYioEIfGvCV19peYN"])
+  .then(function(data) {
+    console.log('Added tracks to playlist!');
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
 })
 
 
