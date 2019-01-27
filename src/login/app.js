@@ -104,6 +104,16 @@ else{
 }
 })
 
+app.get('/playlist', function(req, res, next) {
+  spotifyApi.setAccessToken(accessToken);
+  spotifyApi.getPlaylist(playlist_id)
+  .then(function(data) {
+    res.send(data.body);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+})
+
 
 app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
