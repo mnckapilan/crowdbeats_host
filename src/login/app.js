@@ -50,7 +50,12 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 app.get('/', function(req, res) {
+  if(playlistObj.length == 0){
+    res.redirect('/begin');
+  }
+  else{
   res.redirect('/party_id');
+  }
 });
 app.get('/begin', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
