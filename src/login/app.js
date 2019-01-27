@@ -8,6 +8,7 @@ app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
 const party_id = makeid();
 const playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
+var playlistObj = [];
 var SpotifyWebApi = require('spotify-web-api-node');
 var accessToken;
 var corsOptions = {
@@ -57,7 +58,7 @@ app.get('/access', function(req, res, next) {
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
-      res.redirect('/party_id');
+      res.redirect('/newplaylist');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
       next(err)
@@ -104,21 +105,28 @@ else{
 }
 })
 
-app.get('/playlist', function(req, res, next) {
+
+
+app.get('/newplaylist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
   spotifyApi.getPlaylist(playlist_id)
   .then(function(data) {
-    var returnObj = [];
     for(var i = 0; i< data.body.tracks.items.length; ++i){
         const item = data.body.tracks.items[i].track;
-        console.log(data.body.tracks.items[i].track)
-        returnObj.push({id:item.id, name: item.name})
+        playlistObj.push({id:item.id, name: item.name, votes: 1})
       }
-      res.send(returnObj);
+      res.redirect('/party_id');
     }, function(err) {
     console.log('Something went wrong!', err);
   });
 })
+
+
+
+app.get('/playlist', function(req, res, next) {
+  res.send(playlistObj);
+})
+
 
 
 app.get('/addsong', function(req, res, next) {
@@ -131,5 +139,17 @@ app.get('/addsong', function(req, res, next) {
   });
 })
 
+app.get('/vote', function(req, res, next) {
+   for( var i = 0; i< playlistObj.length; ++i){
+     if(playlistObj[i].id === req.query.id){
+       //FOUND OBJECT
+       var objectToUpdate = playlistObj[i];
+       objectToUpdate.votes += 1;
+       playlistObj[i] = objectToUpdate;
+       break;
+     }
+   }
+   res.send(playlistObj);
+})
 
 app.listen(port, () => console.log(`CrowdBeats listening on port ${port}!`))
