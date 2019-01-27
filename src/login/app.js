@@ -71,6 +71,9 @@ app.get('/newguest', function(req, res, next){
   if(req.query.party_id == party_id){
     res.send({"success" : true})
   }
+  else{
+    res.send("Nonexistent Party!");
+  }
 })
 
 app.get('/profile', function(req, res, next) {
