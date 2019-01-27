@@ -45,9 +45,6 @@ var spotifyApi = new SpotifyWebApi({
   redirectUri : redirect_uri
 });
 
-// app.get('/', function(req, res) {
-//   res.render('index.html', { user: req.user });
-// });
 
 app.get('/', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
@@ -68,7 +65,11 @@ app.get('/access', function(req, res, next) {
 
 app.get('/party_id', function(req, res, next) {
   res.send("party_id is "+party_id);
-}) 
+})
+
+app.get('/newguest', function(req, res, next){
+  res.send({"party_id" : party_id})
+})
 
 app.get('/profile', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
@@ -97,11 +98,21 @@ else{
 }
 })
 
-spotifyApi.createPlaylist('My Cool Playlist', { 'public' : false })
-  .then(function(data) {
-    console.log('Created playlist!');
-  }, function(err) {
-    console.log('Something went wrong!', err);
-  });
+app.get('/playlist', function(req, res, next) {
+  spotifyApi.setAccessToken(accessToken);
+  if(req.query.party_id == party_id){
+    spotifyApi.getPlaylist('5ieJqeLJjjI8iJWaxeBLuK')
+    .then(function(data) {
+      res.send('Some information about this playlist', data.body);
+    }, function(err) {
+      res.send('Something went wrong!', err);
+    });
+}
+else{
+  res.send("Party ID Incorrect/Missing");
+}
+})
+
+
 
 app.listen(port, () => console.log(`CrowdBeats listening on port ${port}!`))
