@@ -11,12 +11,14 @@ const playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
 var playlistObj = [];
 var SpotifyWebApi = require('spotify-web-api-node');
 var accessToken;
+
 var corsOptions = {
-  origin: process.env.origin,
+  origin: '*',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
 app.use(cors(corsOptions))
+
 
 function makeid() {
   var text = "";
