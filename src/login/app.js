@@ -34,8 +34,8 @@ function handleErrors(response) {
 
 const client_id = '68c8c31b05a34904a91f88aa5167e935'; // Your client id
 const client_secret = 'ebddadd2800b45c18bbe9a903781d212'; // Your secret
-// const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
-const redirect_uri = 'http://localhost:8888/access'; // Your redirect uri
+const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
+// const redirect_uri = 'http://localhost:8888/access'; // Your redirect uri
 const scopes = ['user-read-private', 'user-read-email','playlist-modify-public', 'playlist-modify-private'];
 const showDialog = false;
 
@@ -68,7 +68,9 @@ app.get('/party_id', function(req, res, next) {
 })
 
 app.get('/newguest', function(req, res, next){
-  res.send({"party_id" : party_id})
+  if(req.query.party_id == party_id){
+    res.send({"success" : true})
+  }
 })
 
 app.get('/profile', function(req, res, next) {
