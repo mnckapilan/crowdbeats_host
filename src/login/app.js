@@ -150,7 +150,7 @@ app.get('/vote', function(req, res, next) {
        playlistObj[i] = objectToUpdate;
      }
    }
-   playlistObj.sort(function(a,b){return a.votes - b.votes})
+   playlistObj.sort(function(a,b){return b.votes - a.votes})
    
    for(var i = 0; i< oldPlayList.length; ++i){
      for(var j = 0; j < playlistObj.length; ++j){
