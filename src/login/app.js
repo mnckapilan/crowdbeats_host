@@ -67,7 +67,7 @@ app.get('/access', function(req, res, next) {
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
-      res.redirect('/newplaylist');
+      res.redirect('/party_id');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
       next(err)
@@ -75,7 +75,7 @@ app.get('/access', function(req, res, next) {
 }) 
 
 app.get('/party_id', function(req, res, next) {
-  res.send("party_id is "+party_id);
+  res.send("Your party code is "+party_id);
 })
 
 app.get('/newguest', function(req, res, next){
@@ -121,34 +121,28 @@ else{
 
 
 
-app.get('/newplaylist', function(req, res, next) {
+app.get('/playlist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
+  playlistObj = [];
   spotifyApi.getPlaylist(playlist_id)
   .then(function(data) {
     for(var i = 0; i< data.body.tracks.items.length; ++i){
         const item = data.body.tracks.items[i].track;
         playlistObj.push({id:item.id, name: item.name, artist: item.artists[0].name, votes: 1})
       }
-
-      res.redirect('/party_id');
+      res.send(playlistObj);
     }, function(err) {
     console.log('Something went wrong!', err);
   });
 })
 
 
-
-app.get('/playlist', function(req, res, next) {
-  res.send(playlistObj);
-})
-
-
-
 app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
-  spotifyApi.addTracksToPlaylist(playlist_id, req.query.id)
+  var addtracks = [req.query.id];
+  spotifyApi.addTracksToPlaylist(playlist_id, addtracks)
   .then(function(data) {
-    console.log('Added tracks to playlist!');
+    res.send({"success" : true , "id" : req.query.id});
   }, function(err) {
     console.log('Something went wrong!', err);
   });
