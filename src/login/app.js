@@ -107,7 +107,7 @@ app.get('/search', function(req, res, next) {
   .then(function(data) {
     for(var i = 0; i< data.body.tracks.items.length; ++i){
       const item = data.body.tracks.items[i];
-      searchObj.push({id:item.id, name: item.name})
+      searchObj.push({id:item.id, name: item.name, artist: item.artists[0].name})
     }
     res.send(searchObj);
   }, function(err) {
@@ -127,8 +127,9 @@ app.get('/newplaylist', function(req, res, next) {
   .then(function(data) {
     for(var i = 0; i< data.body.tracks.items.length; ++i){
         const item = data.body.tracks.items[i].track;
-        playlistObj.push({id:item.id, name: item.name, votes: 1})
+        playlistObj.push({id:item.id, name: item.name, artist: item.artists[0].name, votes: 1})
       }
+
       res.redirect('/party_id');
     }, function(err) {
     console.log('Something went wrong!', err);
@@ -145,7 +146,7 @@ app.get('/playlist', function(req, res, next) {
 
 app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
-  spotifyApi.addTracksToPlaylist(playlist_id, ["spotify:track:4AhSkRYioEIfGvCV19peYN"])
+  spotifyApi.addTracksToPlaylist(playlist_id, req.query.id)
   .then(function(data) {
     console.log('Added tracks to playlist!');
   }, function(err) {
