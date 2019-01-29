@@ -1,15 +1,14 @@
 const express = require('express');
-// require('dotenv').config();
-const fetch = require("node-fetch");
+require('dotenv').load();
 var cors = require('cors')
-const bodyParser = require('body-parser');
+var SpotifyWebApi = require('spotify-web-api-node');
+
 const app = express();
 app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
 const party_id = makeid();
 const playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
 var playlistObj = [];
-var SpotifyWebApi = require('spotify-web-api-node');
 var accessToken;
 
 var corsOptions = {
@@ -18,7 +17,6 @@ var corsOptions = {
 }
 
 app.use(cors(corsOptions))
-
 
 function makeid() {
   var text = "";
@@ -36,10 +34,10 @@ function handleErrors(response) {
   return response;
 }
 
-const client_id = '68c8c31b05a34904a91f88aa5167e935'; // Your client id
-const client_secret = 'ebddadd2800b45c18bbe9a903781d212'; // Your secret
-const redirect_uri = 'http://crowdbeats-host.herokuapp.com/access'; // Your redirect uri
-// const redirect_uri = 'http://localhost:8888/access'; // Your redirect uri
+const client_id = process.env.CLIENT_ID; // Your client id
+const client_secret = process.env.CLIENT_SECRET; // Your secret
+const redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
+
 const scopes = ['user-read-private', 'user-read-email','playlist-modify-public', 'playlist-modify-private'];
 const showDialog = false;
 
@@ -47,6 +45,11 @@ var spotifyApi = new SpotifyWebApi({
   clientId : client_id,
   clientSecret : client_secret,
   redirectUri : redirect_uri
+});
+
+
+app.get('/logintest' , function(req,res,next) {
+  res.render('index.html');
 });
 
 app.get('/', function(req, res) {
@@ -119,8 +122,6 @@ else{
 }
 })
 
-
-
 app.get('/playlist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
   playlistObj = [];
@@ -170,7 +171,6 @@ app.get('/vote', function(req, res, next) {
    }
   }
   res.send(playlistObj);
-
 })
 
 function reorder(initial, final){
