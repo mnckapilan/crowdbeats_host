@@ -131,6 +131,7 @@ else{
 
 app.get('/setplaylist', function(req, res, next){
 playlist_id = req.query.id;
+res.redirect('/playlist');
 });
 
 app.get('/playlist', function(req, res, next) {
