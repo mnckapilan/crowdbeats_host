@@ -7,7 +7,8 @@ const app = express();
 app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
 const party_id = makeid();
-const playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
+var playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
+var spotifyAuth = false;
 var playlistObj = [];
 var accessToken;
 
@@ -48,12 +49,17 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 
-app.get('/logintest' , function(req,res,next) {
-  res.render('index.html');
+app.get('/logout' , function(req,res,next) {
+  spotifyApi.resetAccessToken();
+  spotifyApi.resetRefreshToken();
+  code = '';
+  spotifyAuth = false;
+  res.send('Thanks for using CrowdBeats ');
 });
 
 app.get('/', function(req, res) {
-  if(playlistObj.length == 0){
+
+  if(!spotifyAuth){
     res.redirect('/begin');
   }
   else{
@@ -66,10 +72,11 @@ app.get('/begin', function(req, res) {
 });
 
 app.get('/access', function(req, res, next) {
-    const code = req.query.code;
+    var code = req.query.code;
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
+      spotifyAuth = true;
       res.redirect('/party_id');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
@@ -121,6 +128,10 @@ else{
   res.send("Party ID Incorrect/Missing");
 }
 })
+
+app.get('/setplaylist', function(req, res, next){
+playlist_id = req.query.id;
+});
 
 app.get('/playlist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
