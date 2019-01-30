@@ -46,7 +46,7 @@ var spotifyApi = new SpotifyWebApi({
   clientId : client_id,
   clientSecret : client_secret,
   redirectUri : redirect_uri
-});
+})
 
 
 
@@ -58,7 +58,7 @@ app.get('/', function(req, res) {
   else{
   res.redirect('/party_id');
   }
-});
+})
 
 
 
@@ -67,7 +67,7 @@ app.get('/login', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
   res.redirect(authorizeURL);
   
-});
+})
 
 app.get('/logout' , function(req,res,next) {
   spotifyApi.resetAccessToken();
@@ -77,7 +77,7 @@ app.get('/logout' , function(req,res,next) {
   accessToken = '';
   playlistObj = [];
   res.redirect(process.env.SETUP_URL);
-});
+})
 
 app.get('/access', function(req, res, next) {
     const code = req.query.code;
@@ -89,7 +89,7 @@ app.get('/access', function(req, res, next) {
       console.log('Something went wrong when retrieving the access token!', err);
       next(err)
     })
-}) ;
+})
 
 app.get('/populate' , function(req,res,next) {
   spotifyApi.setAccessToken(accessToken);
@@ -104,7 +104,7 @@ app.get('/populate' , function(req,res,next) {
     }, function(err) {
     console.log('Something went wrong!', err);
   });
-});
+})
 
 app.get('/party_id', function(req, res, next) {
   if(!playlistObj.length == 0){
@@ -124,12 +124,12 @@ app.get('/profile', function(req, res, next) {
     console.error(err);
     next(err)
   });
-}) 
+})
 
 app.get('/setplaylist', function(req, res, next){
   playlist_id = req.query.id;
   res.redirect('/playlist');
-  });
+})
 
 
 //*****************************************************************
