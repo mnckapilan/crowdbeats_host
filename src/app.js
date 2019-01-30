@@ -76,7 +76,7 @@ app.get('/logout' , function(req,res,next) {
   party_id = makeid();
   accessToken = '';
   playlistObj = [];
-  res.redirect('http://localhost:3000/');
+  res.redirect(process.env.SETUP_URL);
 });
 
 app.get('/access', function(req, res, next) {
@@ -100,7 +100,7 @@ app.get('/populate' , function(req,res,next) {
         const item = data.body.tracks.items[i].track;
         playlistObj.push({id:item.id, name: item.name, artist: item.artists[0].name, votes: 1})
       }
-      res.redirect('http://localhost:3000');
+      res.redirect(process.env.SETUP_URL);
     }, function(err) {
     console.log('Something went wrong!', err);
   });
