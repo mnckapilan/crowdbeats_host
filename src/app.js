@@ -6,7 +6,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 const app = express();
 app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
-const party_id = makeid();
+var party_id = makeid();
 var playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
 // var spotifyAuth = false;
 var playlistObj = [];
@@ -49,26 +49,34 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 
-// app.get('/logout' , function(req,res,next) {
-//   spotifyApi.resetAccessToken();
-//   spotifyApi.resetRefreshToken();
-//   code = '';
-//   spotifyAuth = false;
-//   res.send('Thanks for using CrowdBeats ');
-// });
+
 
 app.get('/', function(req, res) {
-
   if(playlistObj.length === 0){
-    res.redirect('/begin');
+    res.redirect('/login');
   }
   else{
   res.redirect('/party_id');
   }
 });
-app.get('/begin', function(req, res) {
+
+
+
+
+app.get('/login', function(req, res) {
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, null, showDialog);
   res.redirect(authorizeURL);
+  
+});
+
+app.get('/logout' , function(req,res,next) {
+  spotifyApi.resetAccessToken();
+  spotifyApi.resetRefreshToken();
+  code = '';
+  party_id = makeid();
+  accessToken = '';
+  playlistObj = [];
+  res.redirect('http://localhost:3000/');
 });
 
 app.get('/access', function(req, res, next) {
@@ -76,24 +84,34 @@ app.get('/access', function(req, res, next) {
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
-      // spotifyAuth = true;
-      res.redirect('/party_id');
+      res.redirect('/populate');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
       next(err)
     })
-}) 
+}) ;
+
+app.get('/populate' , function(req,res,next) {
+  spotifyApi.setAccessToken(accessToken);
+  playlistObj = [];
+  spotifyApi.getPlaylist(playlist_id)
+  .then(function(data) {
+    for(var i = 0; i< data.body.tracks.items.length; ++i){
+        const item = data.body.tracks.items[i].track;
+        playlistObj.push({id:item.id, name: item.name, artist: item.artists[0].name, votes: 1})
+      }
+      res.redirect('http://localhost:3000');
+    }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+});
 
 app.get('/party_id', function(req, res, next) {
+  if(!playlistObj.length == 0){
   res.send({"party_id" : party_id});
-})
-
-app.get('/newguest', function(req, res, next){
-  if(req.query.party_id === party_id){
-    res.send({"success" : true})
   }
   else{
-    res.send({"success" : false});
+    res.send({"party_id" : "You're not logged in"});
   }
 })
 
@@ -107,6 +125,26 @@ app.get('/profile', function(req, res, next) {
     next(err)
   });
 }) 
+
+app.get('/setplaylist', function(req, res, next){
+  playlist_id = req.query.id;
+  res.redirect('/playlist');
+  });
+
+
+//*****************************************************************
+// Endpoints for Guest Client
+// Do not access using a browser
+//*****************************************************************
+
+app.get('/newguest', function(req, res, next){
+  if(req.query.party_id === party_id){
+    res.send({"success" : true})
+  }
+  else{
+    res.send({"success" : false});
+  }
+})
 
 app.get('/search', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
@@ -129,11 +167,6 @@ else{
 }
 })
 
-app.get('/setplaylist', function(req, res, next){
-playlist_id = req.query.id;
-res.redirect('/playlist');
-});
-
 app.get('/playlist', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
   playlistObj = [];
@@ -148,7 +181,6 @@ app.get('/playlist', function(req, res, next) {
     console.log('Something went wrong!', err);
   });
 })
-
 
 app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
