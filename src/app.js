@@ -152,7 +152,7 @@ app.get('/playlist', function(req, res, next) {
 
 app.get('/addsong', function(req, res, next) {
   spotifyApi.setAccessToken(accessToken);
-  var addtracks = [req.query.id];
+  var addtracks = ["spotify:track:"+req.query.id];
   spotifyApi.addTracksToPlaylist(playlist_id, addtracks)
   .then(function(data) {
     res.send({"success" : true , "id" : req.query.id});
