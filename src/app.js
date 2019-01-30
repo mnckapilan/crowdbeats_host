@@ -8,7 +8,7 @@ app.set('port', process.env.PORT || 8888);
 const port = process.env.PORT || 8888; 
 const party_id = makeid();
 var playlist_id = "7MkrOB6DfoDsLmwETqnXL4";
-var spotifyAuth = false;
+// var spotifyAuth = false;
 var playlistObj = [];
 var accessToken;
 
@@ -49,17 +49,17 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 
-app.get('/logout' , function(req,res,next) {
-  spotifyApi.resetAccessToken();
-  spotifyApi.resetRefreshToken();
-  code = '';
-  spotifyAuth = false;
-  res.send('Thanks for using CrowdBeats ');
-});
+// app.get('/logout' , function(req,res,next) {
+//   spotifyApi.resetAccessToken();
+//   spotifyApi.resetRefreshToken();
+//   code = '';
+//   spotifyAuth = false;
+//   res.send('Thanks for using CrowdBeats ');
+// });
 
 app.get('/', function(req, res) {
 
-  if(!spotifyAuth){
+  if(playlistObj.length === 0){
     res.redirect('/begin');
   }
   else{
@@ -72,11 +72,11 @@ app.get('/begin', function(req, res) {
 });
 
 app.get('/access', function(req, res, next) {
-    var code = req.query.code;
+    const code = req.query.code;
     spotifyApi.authorizationCodeGrant(code)
     .then(function(data) {
       accessToken = data.body.access_token
-      spotifyAuth = true;
+      // spotifyAuth = true;
       res.redirect('/party_id');
     }, function(err) {
       console.log('Something went wrong when retrieving the access token!', err);
