@@ -85,7 +85,7 @@ app.get('/access', function(req, res, next) {
 }) 
 
 app.get('/party_id', function(req, res, next) {
-  res.send("Your party code is "+party_id);
+  res.send({"party_id" : party_id});
 })
 
 app.get('/newguest', function(req, res, next){
