@@ -127,7 +127,7 @@ app.get('/profile', function(req, res, next) {
 })
 
 app.get('/setplaylist', function(req, res, next){
-  playlist_id = req.query.id;
+  playlist_id = req.query.id.substring(32,54);
   res.redirect('/playlist');
 })
 
