@@ -128,7 +128,7 @@ app.get('/profile', function(req, res, next) {
 
 app.get('/setplaylist', function(req, res, next){
   playlist_id = req.query.id;
-  res.redirect('/playlist');
+  res.send({"playlist_id": playlist_id});
 })
 
 
